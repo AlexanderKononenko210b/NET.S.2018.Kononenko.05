@@ -21,7 +21,7 @@ namespace NUnitTestAlgorithms
         [TestCase(6, 12, -30, 24)]
         [TestCase(2, 42, 86)]
         public void Euclid_With_Valid_Data(int rezalt, params int[] inputData)
-            => Assert.AreEqual(AlgorithmsMethods.EuclidForNumbers(inputData), rezalt);
+            => Assert.AreEqual(Algorithms.AlgorithmsForTasks.EuclidForNumbers(inputData), rezalt);
 
         /// <summary>
         /// Test method BinaryEuclid with valid data
@@ -33,7 +33,7 @@ namespace NUnitTestAlgorithms
         [TestCase(6, 12, -30, 24)]
         [TestCase(2, 42, 86)]
         public void BinaryEuclid_With_Valid_Data(int rezalt, params int[] inputData)
-            => Assert.AreEqual(AlgorithmsMethods.BinaryEuclid(inputData), rezalt);
+            => Assert.AreEqual(Algorithms.AlgorithmsForTasks.BinaryEuclid(inputData), rezalt);
 
         /// <summary>
         /// Test to check for the occurrence of an exception ArgumentNullException 
@@ -41,7 +41,7 @@ namespace NUnitTestAlgorithms
         /// </summary>
         [TestCase(null)]
         public void EuclidForNumbers_If_Input_Array_Length_Is_0_And_1(int[] inputArray)
-            => Assert.Throws<ArgumentNullException>(() => AlgorithmsMethods.EuclidForNumbers(inputArray));
+            => Assert.Throws<ArgumentNullException>(() => Algorithms.AlgorithmsForTasks.EuclidForNumbers(inputArray));
 
         /// <summary>
         /// Test to check for the occurrence of an exception ArgumentOutOfRangeException
@@ -51,6 +51,6 @@ namespace NUnitTestAlgorithms
         [TestCase(new int[0])]
         [TestCase(new int[1] { 2 })]
         public void EuclidForNumbers_If_Input_Array_Null(int[] inputArray)
-            => Assert.Throws<ArgumentOutOfRangeException>(() => AlgorithmsMethods.EuclidForNumbers(inputArray));
+            => Assert.Throws<ArgumentOutOfRangeException>(() => Algorithms.AlgorithmsForTasks.EuclidForNumbers(inputArray));
     }
 }

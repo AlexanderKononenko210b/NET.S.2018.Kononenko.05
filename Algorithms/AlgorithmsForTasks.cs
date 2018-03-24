@@ -7,7 +7,7 @@ namespace Algorithms
     /// <summary>
     /// Class performance algorithms
     /// </summary>
-    public static class AlgorithmsMethods
+    public static class AlgorithmsForTasks
     {
         const int BIT_IN_BYTE = 8;
 

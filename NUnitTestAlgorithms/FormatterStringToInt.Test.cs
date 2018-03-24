@@ -25,7 +25,7 @@ namespace NUnitTestAlgorithms
         [TestCase("764241",  8,  256161)]
         [TestCase("10",  5,  5)]
         public void FormatterStringToInt_With_Valid_Data(string inputString, int @base, int result)
-					=> Assert.AreEqual(AlgorithmsMethods.FormatterStringToInt(inputString, @base), result);
+					=> Assert.AreEqual(Algorithms.AlgorithmsForTasks.FormatterStringToInt(inputString, @base), result);
 
         /// <summary>
         /// Test method FormatterStringToInt expected ArgumentException
@@ -39,7 +39,7 @@ namespace NUnitTestAlgorithms
         [TestCase(null, 20)]
         [TestCase(" ", 20)]
         public void FormatterStringToInt_Expected_ArgumentException(string inputString, int @base)
-                    => Assert.Throws<ArgumentException>(() => AlgorithmsMethods.FormatterStringToInt(inputString, @base));
+                    => Assert.Throws<ArgumentException>(() => Algorithms.AlgorithmsForTasks.FormatterStringToInt(inputString, @base));
 
         /// <summary>
         /// Test method FormatterStringToInt expected OverflowException
@@ -48,6 +48,6 @@ namespace NUnitTestAlgorithms
         /// <param name="base">base system number</param>
         [TestCase("11111111111111111111111111111111", 2)]
         public void FormatterStringToInt_Expected_OverflowException(string inputString, int @base)
-                    => Assert.Throws<OverflowException>(() => AlgorithmsMethods.FormatterStringToInt(inputString, @base));
+                    => Assert.Throws<OverflowException>(() => Algorithms.AlgorithmsForTasks.FormatterStringToInt(inputString, @base));
     }
 }
