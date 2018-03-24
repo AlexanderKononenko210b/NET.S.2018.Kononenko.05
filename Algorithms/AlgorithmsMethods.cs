@@ -1,53 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace Algorithms
 {
+    /// <summary>
+    /// Class performance algorithms
+    /// </summary>
     public static class AlgorithmsMethods
     {
-        #region EuclidMethods
+        const int BIT_IN_BYTE = 8;
+
+        #region Euclid
 
         /// <summary>
         /// Method for finding the GCD of integers by the classical Euclidean method
         /// </summary>
-        /// <param name="inputBunch">input numbers</param>
+        /// <param name="inputArray">input numbers</param>
         /// <returns>greatest common divisor</returns>
-        public static int AlgorithmOfEuclidForNumbers(params int [] inputBunch)
+        public static int EuclidForNumbers(params int [] inputArray)
         {
-            if (inputBunch == null)
+            if (inputArray == null)
             {
-                throw new ArgumentNullException($"Argument {nameof(inputBunch)} is null");
+                throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
             }
 
-            if (inputBunch.Length == 0)
+            if (inputArray.Length == 0)
             {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputBunch)} length is 0");
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
             }
 
-            if (inputBunch.Length == 1)
+            if (inputArray.Length == 1)
             {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputBunch)} length to be more than 1");
-            }
-
-            for(int i = 0; i < inputBunch.Length; i++)
-            {
-                ValidateNumberTypeInt(inputBunch[i]);
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length to be more than 1");
             }
 
             var depth = 0;
 
             do
             {
-                inputBunch[depth + 1] = AlgorithmOfEuclid(ref inputBunch[depth], ref inputBunch[depth + 1]);
+                inputArray[depth + 1] = EuclidForTwoNumbers(ref inputArray[depth], ref inputArray[depth + 1]);
 
                 depth++;
             }
-            while (depth != inputBunch.Length - 1);
+            while (depth != inputArray.Length - 1);
 
-            return inputBunch[inputBunch.Length - 1];
+            return inputArray[inputArray.Length - 1];
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace Algorithms
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        public static int AlgorithmOfEuclid(ref int firstNumber, ref int secondNumber)
+        public static int EuclidForTwoNumbers(ref int firstNumber, ref int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -69,51 +67,47 @@ namespace Algorithms
                 else
                     secondNumber %= firstNumber;
             }
+
             return (firstNumber == 0) ? secondNumber : firstNumber;
         }
 
-        #endregion EuclidMethods
+        #endregion Euclid
 
-        #region BinaryEuclidMethods
+        #region BinaryEuclid
 
         /// <summary>
         /// Method for finding the greatest common divisor of integers by the classical Euclidean method
         /// </summary>
-        /// <param name="inputBunch">input numbers</param>
+        /// <param name="inputArray">input numbers</param>
         /// <returns>greatest common divisor</returns>
-        public static int BinaryAlgorithmOfEuclidForNumbers(params int[] inputBunch)
+        public static int BinaryEuclid(params int[] inputArray)
         {
-            if (inputBunch == null)
+            if (inputArray == null)
             {
-                throw new ArgumentNullException($"Argument {nameof(inputBunch)} is null");
+                throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
             }
 
-            if (inputBunch.Length == 0)
+            if (inputArray.Length == 0)
             {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputBunch)} length is 0");
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
             }
 
-            if (inputBunch.Length == 1)
+            if (inputArray.Length == 1)
             {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputBunch)} length to be more than 1");
-            }
-
-            for (int i = 0; i < inputBunch.Length; i++)
-            {
-                ValidateNumberTypeInt(inputBunch[i]);
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length to be more than 1");
             }
 
             var depth = 0;
 
             do
             {
-                inputBunch[depth + 1] = BinaryAlgorithmOfEuclid(ref inputBunch[depth], ref inputBunch[depth + 1]);
+                inputArray[depth + 1] = BinaryAlgorithmOfEuclid(inputArray[depth], inputArray[depth + 1]);
 
                 depth++;
             }
-            while (depth != inputBunch.Length - 1);
+            while (depth != inputArray.Length - 1);
 
-            return inputBunch[inputBunch.Length - 1];
+            return inputArray[inputArray.Length - 1];
         }
 
         /// <summary>
@@ -122,7 +116,7 @@ namespace Algorithms
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        public static int BinaryAlgorithmOfEuclid(ref int firstNumber, ref int secondNumber)
+        public static int BinaryAlgorithmOfEuclid(int firstNumber, int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -174,42 +168,168 @@ namespace Algorithms
             return firstNumber << offset;
         }
 
-        #endregion BinaryEuclidMethods
+        #endregion BinaryEuclid
 
-        #region Helper
+        #region FormatterDoubleToBinary
 
         /// <summary>
-        /// Method for validate number type int
+        /// Method for formatter number type double in to the number formatter binary
         /// </summary>
-        /// <param name="numberArrayForValidate">array params type int</param>
-        public static void ValidateNumberTypeInt(params int[] numberArrayForValidate)
+        /// <param name="inputNumberWithDoublePoint">source number</param>
+        /// <returns>bunary number in string performance</returns>
+        public static string FormatterDoubleToBinary(this double inputNumberWithDoublePoint)
         {
-            for (int i = 0; i < numberArrayForValidate.Length; i++)
+            var structForFormatter = new DoubleToLongStruct { DoubleTo8Byte = inputNumberWithDoublePoint };
+
+            var valueToBinary = structForFormatter.LongTo8Byte;
+
+            var lengthResult = sizeof(long) * BIT_IN_BYTE;
+
+            var reversResult = lengthResult;
+
+            var resultArray = new StringBuilder();
+
+            for (int i = 0; i < lengthResult; i++)
             {
-                if (numberArrayForValidate[i] < int.MinValue || numberArrayForValidate[i] > int.MaxValue)
-                {
-                    throw new ArgumentOutOfRangeException($"Argument`s with index {i} is not valid");
-                }
+                var addNumber = ((valueToBinary & (1L << reversResult - 1)) == 0) ? (byte)0 : (byte)1;
+
+                resultArray.Append(((valueToBinary & (1L << reversResult - 1)) == 0) ? (byte)0 : (byte)1);
+
+                reversResult--;
+            }
+
+            return resultArray.ToString();
+        }
+
+        /// <summary>
+        /// Private helper struct for the perfomance base system input number
+        /// </summary>
+        [StructLayout(LayoutKind.Explicit)]
+        private struct DoubleToLongStruct
+        {
+            [FieldOffset(0)]
+            private readonly long longTo8Byte;
+
+            [FieldOffset(0)]
+            private double doubleTo8Byte;
+
+            public double DoubleTo8Byte
+            {
+                get { return doubleTo8Byte; }
+                set { doubleTo8Byte = value; }
+            }
+
+            public long LongTo8Byte
+            {
+                get { return longTo8Byte; }
             }
         }
+
+        #endregion Formatter
+
+        # region FormatterStringToInt
+
+        /// <summary>
+        /// Method for formatter number in string performance 
+        /// </summary>
+        /// <param name="inputString">input string</param>
+        /// <param name="base">base system number</param>
+        /// <returns>int perfomance</returns>
+        public static int FormatterStringToInt(this string inputString, int @base)
+        {
+            if(string.IsNullOrEmpty(inputString))
+            {
+                throw new ArgumentException($"Input string nameof {inputString} is not valid");
+            }
+
+            var inputStringToUpper = inputString.ToUpper();
+
+            var notation = new Notation(@base);
+
+            var resultNumber = 0;
+
+            var degreeToBase = 1;
+
+            for (int i = inputStringToUpper.Length - 1; i >= 0; i--)
+            {
+                var indexSearch = notation.Alphabet.IndexOf(inputStringToUpper[i]);
+
+                if (indexSearch < 0 || indexSearch > @base)
+                {
+                    throw new ArgumentException($"Input string does not have base as {notation.Base}");
+                }
+
+                    resultNumber += indexSearch * degreeToBase;
+
+                checked
+                {
+                    if (i != 0)
+                        degreeToBase *= notation.Base;
+                }
+            }
+
+            return resultNumber;
+        }
+
+        /// <summary>
+        /// Helper class describing system number base
+        /// </summary>
+        public class Notation
+        {
+            const string ALFABET_SOURCE = "0123456789ABCDEF";
+
+            const int START_BASE_BORDER = 0;
+
+            const int END_BASE_BORDER = 16;
+
+            private int @base;
+
+            public int Base
+            {
+                get { return @base; }
+
+                set
+                {
+                    if (value < START_BASE_BORDER || value > END_BASE_BORDER)
+                    {
+                        throw new ArgumentException($"Arguments nameof {value} is not valid");
+                    }
+                    else
+                    {
+                        @base = value;
+                    }
+                }
+            }
+
+            public string Alphabet { get; private set; }
+
+            public Notation(int inputBase)
+            {
+                Base = inputBase;
+
+                Alphabet = ALFABET_SOURCE.Substring(0, Base);
+            }
+        }
+
+        #endregion FormatterStringToInt
+
+        #region Helper
 
         /// <summary>
         /// Method for test method AlgorithmOfEuclidForNumbers
         /// </summary>
         /// <param name="nod">nod after calculate</param>
-        /// <param name="inputBunch">input bunch</param>
-        /// <returns></returns>
-        public static bool AlgorithmOfEuclidForNumbersHelper(int nod, params int[] inputBunch)
+        /// <param name="inputArray">input bunch</param>
+        /// <returns>true if result dune and false if not dune</returns>
+        public static bool AlgorithmOfEuclidForNumbersHelper(int nod, params int[] inputArray)
         {
-            int flagSuccessful = 0;
-
-            for (int i = 0; i < inputBunch.Length; i++)
+            for (int i = 0; i < inputArray.Length; i++)
             {
-                if(inputBunch[i] % nod == 0)
-                    flagSuccessful++;
+                if(inputArray[i] % nod == 0)
+                    return false;
             }
 
-            return flagSuccessful == inputBunch.Length;
+            return true;
         }
 
         #endregion Helper
