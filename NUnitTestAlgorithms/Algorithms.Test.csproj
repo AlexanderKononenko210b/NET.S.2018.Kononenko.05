@@ -53,12 +53,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EuclidAndBinaryEuclid.Test.cs" />
     <Compile Include="FormatterDoubleToBinary.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormatterStringToInt.Test.cs" />
+    <Compile Include="EuclidMethods.Test.cs" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>

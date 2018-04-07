@@ -11,14 +11,17 @@ namespace Algorithms
     {
         const int BIT_IN_BYTE = 8;
 
-        #region Euclid
+        #region EuclidDelegate
+
+        public delegate int EuclidDelegate(int first, int second);
 
         /// <summary>
-        /// Method for finding the GCD of integers by the classical Euclidean method
+        /// Method input delegate and array params
         /// </summary>
-        /// <param name="inputArray">input numbers</param>
+        /// <param name="delegateInput">delegate which performance method for calculate</param>
+        /// <param name="inputArray">input array params</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidForNumbers(params int [] inputArray)
+        public static int EuclidMethods(EuclidDelegate delegateInput, params int[] inputArray)
         {
             if (inputArray == null)
             {
@@ -39,7 +42,7 @@ namespace Algorithms
 
             do
             {
-                inputArray[depth + 1] = EuclidForTwoNumbers(ref inputArray[depth], ref inputArray[depth + 1]);
+                inputArray[depth + 1] = delegateInput.Invoke(inputArray[depth], inputArray[depth + 1]);
 
                 depth++;
             }
@@ -48,13 +51,17 @@ namespace Algorithms
             return inputArray[inputArray.Length - 1];
         }
 
+        #endregion EuclidDelegate
+
+        #region Euclid
+
         /// <summary>
         /// Classic Euclid algorithm for find greatest common divisor
         /// </summary>
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidForTwoNumbers(ref int firstNumber, ref int secondNumber)
+        public static int EuclidForTwoNumbers(int firstNumber, int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -74,41 +81,6 @@ namespace Algorithms
         #endregion Euclid
 
         #region BinaryEuclid
-
-        /// <summary>
-        /// Method for finding the greatest common divisor of integers by the classical Euclidean method
-        /// </summary>
-        /// <param name="inputArray">input numbers</param>
-        /// <returns>greatest common divisor</returns>
-        public static int BinaryEuclid(params int[] inputArray)
-        {
-            if (inputArray == null)
-            {
-                throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
-            }
-
-            if (inputArray.Length == 0)
-            {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
-            }
-
-            if (inputArray.Length == 1)
-            {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length to be more than 1");
-            }
-
-            var depth = 0;
-
-            do
-            {
-                inputArray[depth + 1] = BinaryAlgorithmOfEuclid(inputArray[depth], inputArray[depth + 1]);
-
-                depth++;
-            }
-            while (depth != inputArray.Length - 1);
-
-            return inputArray[inputArray.Length - 1];
-        }
 
         /// <summary>
         /// Binary Euclid`s method for find greatest common divisor
