@@ -28,6 +28,11 @@ namespace Algorithms
                 throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
             }
 
+            if(delegateInput == null)
+            {
+                throw new ArgumentNullException($"Argument {nameof(delegateInput)} is null");
+            }
+
             if (inputArray.Length == 0)
             {
                 throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
