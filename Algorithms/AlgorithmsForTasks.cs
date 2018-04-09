@@ -11,43 +11,74 @@ namespace Algorithms
     {
         const int BIT_IN_BYTE = 8;
 
-        #region EuclidDelegate
+        private static Func<int, int, int>[] delegateInput = { EuclidForTwoNumbers, BinaryAlgorithmOfEuclid };
 
-        public delegate int EuclidDelegate(int first, int second);
+        #region Public Api
 
         /// <summary>
-        /// Method input delegate and array params
+        /// Method calculate greatest common divisor two params type int using method EuclidForTwoNumbers
         /// </summary>
-        /// <param name="delegateInput">delegate which performance method for calculate</param>
+        /// <param name="first">first parametr</param>
+        /// <param name="second">second parametr</param>
+        /// <returns>greatest common divisor</returns>
+        public static int EuclidClassic(int first, int second)
+        {
+            return delegateInput[0](first, second);
+        }
+
+        /// <summary>
+        /// Method calculate greatest common divisor two params type int using method BinaryAlgorithmOfEuclid
+        /// </summary>
+        /// <param name="first">first parametr</param>
+        /// <param name="second">second parametr</param>
+        /// <returns>greatest common divisor</returns>
+        public static int EuclidBinary(int first, int second)
+        {
+            return delegateInput[1](first, second);
+        }
+
+        /// <summary>
+        /// Method calculate greatest common divisor three params type int using method EuclidForTwoNumbers
+        /// </summary>
+        /// <param name="first">first parametr</param>
+        /// <param name="second">second parametr</param>
+        /// <param name="third">third parametr</param>
+        /// <returns>greatest common divisor</returns>
+        public static int EuclidClassic(int first, int second, int third)
+        {
+            var firstResult = delegateInput[0](first, second);
+
+            return delegateInput[1](firstResult, third);
+        }
+
+        /// <summary>
+        /// Method calculate greatest common divisor three params type int using method BinaryAlgorithmOfEuclid
+        /// </summary>
+        /// <param name="first">first parametr</param>
+        /// <param name="second">second parametr</param>
+        /// <param name="third">third parametr</param>
+        /// <returns>greatest common divisor</returns>
+        public static int EuclidBinary(int first, int second, int third)
+        {
+            var firstResult = delegateInput[1](first, second);
+
+            return delegateInput[1](firstResult, third);
+        }
+
+        /// <summary>
+        /// Method calculate greatest common divisor array params using method EuclidForTwoNumbers
+        /// </summary>
         /// <param name="inputArray">input array params</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidMethods(EuclidDelegate delegateInput, params int[] inputArray)
+        public static int EuclidClassic(params int[] inputArray)
         {
-            if (inputArray == null)
-            {
-                throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
-            }
-
-            if(delegateInput == null)
-            {
-                throw new ArgumentNullException($"Argument {nameof(delegateInput)} is null");
-            }
-
-            if (inputArray.Length == 0)
-            {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
-            }
-
-            if (inputArray.Length == 1)
-            {
-                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length to be more than 1");
-            }
+            VerifyArray(inputArray);
 
             var depth = 0;
 
             do
             {
-                inputArray[depth + 1] = delegateInput.Invoke(inputArray[depth], inputArray[depth + 1]);
+                inputArray[depth + 1] = delegateInput[0](inputArray[depth], inputArray[depth + 1]);
 
                 depth++;
             }
@@ -56,7 +87,29 @@ namespace Algorithms
             return inputArray[inputArray.Length - 1];
         }
 
-        #endregion EuclidDelegate
+        /// <summary>
+        /// Method calculate greatest common divisor array params using method BinaryAlgorithmOfEuclid
+        /// </summary>
+        /// <param name="inputArray">input array params</param>
+        /// <returns>greatest common divisor</returns>
+        public static int EuclidBinary(params int[] inputArray)
+        {
+            VerifyArray(inputArray);
+
+            var depth = 0;
+
+            do
+            {
+                inputArray[depth + 1] = delegateInput[1](inputArray[depth], inputArray[depth + 1]);
+
+                depth++;
+            }
+            while (depth != inputArray.Length - 1);
+
+            return inputArray[inputArray.Length - 1];
+        }
+
+        #endregion Public Api
 
         #region Euclid
 
@@ -66,7 +119,7 @@ namespace Algorithms
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidForTwoNumbers(int firstNumber, int secondNumber)
+        private static int EuclidForTwoNumbers(int firstNumber, int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -291,6 +344,28 @@ namespace Algorithms
         #endregion FormatterStringToInt
 
         #region Helper
+
+        /// <summary>
+        /// Method for verify input Array type int
+        /// </summary>
+        /// <param name="inputArray">input array</param>
+        private static void VerifyArray(params int[] inputArray)
+        {
+            if (inputArray == null)
+            {
+                throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
+            }
+
+            if (inputArray.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length is 0");
+            }
+
+            if (inputArray.Length == 1)
+            {
+                throw new ArgumentOutOfRangeException($"Argument`s {nameof(inputArray)} length to be more than 1");
+            }
+        }
 
         /// <summary>
         /// Method for test method AlgorithmOfEuclidForNumbers
