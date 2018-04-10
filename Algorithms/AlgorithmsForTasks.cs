@@ -11,9 +11,7 @@ namespace Algorithms
     {
         const int BIT_IN_BYTE = 8;
 
-        private static Func<int, int, int>[] delegateInput = { EuclidForTwoNumbers, BinaryAlgorithmOfEuclid };
-
-        #region Public Api
+        #region EuclidPublicApi
 
         /// <summary>
         /// Method calculate greatest common divisor two params type int using method EuclidForTwoNumbers
@@ -21,10 +19,7 @@ namespace Algorithms
         /// <param name="first">first parametr</param>
         /// <param name="second">second parametr</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidClassic(int first, int second)
-        {
-            return delegateInput[0](first, second);
-        }
+        public static int EuclidClassic(int first, int second) => ClassicEuclidAlgorithm(first, second);
 
         /// <summary>
         /// Method calculate greatest common divisor two params type int using method BinaryAlgorithmOfEuclid
@@ -32,10 +27,7 @@ namespace Algorithms
         /// <param name="first">first parametr</param>
         /// <param name="second">second parametr</param>
         /// <returns>greatest common divisor</returns>
-        public static int EuclidBinary(int first, int second)
-        {
-            return delegateInput[1](first, second);
-        }
+        public static int EuclidBinary(int first, int second) => BinaryEuclidAlgorithm(first, second);
 
         /// <summary>
         /// Method calculate greatest common divisor three params type int using method EuclidForTwoNumbers
@@ -45,11 +37,7 @@ namespace Algorithms
         /// <param name="third">third parametr</param>
         /// <returns>greatest common divisor</returns>
         public static int EuclidClassic(int first, int second, int third)
-        {
-            var firstResult = delegateInput[0](first, second);
-
-            return delegateInput[1](firstResult, third);
-        }
+            => ApproachThreeParams(ClassicEuclidAlgorithm, first, second, third);
 
         /// <summary>
         /// Method calculate greatest common divisor three params type int using method BinaryAlgorithmOfEuclid
@@ -59,11 +47,7 @@ namespace Algorithms
         /// <param name="third">third parametr</param>
         /// <returns>greatest common divisor</returns>
         public static int EuclidBinary(int first, int second, int third)
-        {
-            var firstResult = delegateInput[1](first, second);
-
-            return delegateInput[1](firstResult, third);
-        }
+            => ApproachThreeParams(BinaryEuclidAlgorithm, first, second, third);
 
         /// <summary>
         /// Method calculate greatest common divisor array params using method EuclidForTwoNumbers
@@ -71,21 +55,7 @@ namespace Algorithms
         /// <param name="inputArray">input array params</param>
         /// <returns>greatest common divisor</returns>
         public static int EuclidClassic(params int[] inputArray)
-        {
-            VerifyArray(inputArray);
-
-            var depth = 0;
-
-            do
-            {
-                inputArray[depth + 1] = delegateInput[0](inputArray[depth], inputArray[depth + 1]);
-
-                depth++;
-            }
-            while (depth != inputArray.Length - 1);
-
-            return inputArray[inputArray.Length - 1];
-        }
+            => ApproachArrayParams(ClassicEuclidAlgorithm, inputArray);
 
         /// <summary>
         /// Method calculate greatest common divisor array params using method BinaryAlgorithmOfEuclid
@@ -93,25 +63,62 @@ namespace Algorithms
         /// <param name="inputArray">input array params</param>
         /// <returns>greatest common divisor</returns>
         public static int EuclidBinary(params int[] inputArray)
+            => ApproachArrayParams(BinaryEuclidAlgorithm, inputArray);
+
+        #endregion EuclidPublicApi
+
+        #region EuclidApproachs
+
+        /// <summary>
+        /// Approach Euclid for three parameters
+        /// </summary>
+        /// <param name="delegat">delegat incapsulating method for calc greatest common divisor</param>
+        /// <param name="first">first parametr</param>
+        /// <param name="second">second parametr</param>
+        /// <param name="third">third parametr</param>
+        /// <returns>greatest common divisor</returns>
+        private static int ApproachThreeParams(Func<int, int, int> delegat, int first, int second, int third)
+        {
+            var firstResult = delegat(first, second);
+
+            return delegat(firstResult, third);
+        }
+
+        /// <summary>
+        /// Approach Euclid for array params
+        /// </summary>
+        /// <param name="delegat">delegat incapsulating method for calc greatest common divisor</param>
+        /// <param name="inputArray">input array params</param>
+        /// <returns>greatest common divisor</returns>
+        private static int ApproachArrayParams(Func<int, int, int> delegat, params int[] inputArray)
         {
             VerifyArray(inputArray);
+
+            var arrayForWork = new int[inputArray.Length];
+
+            arrayForWork = (int[])inputArray.Clone();
+
+            if(arrayForWork == null)
+            {
+                throw new InvalidCastException($"Operation clon from argument {nameof(inputArray)} is invalid");
+            }
 
             var depth = 0;
 
             do
             {
-                inputArray[depth + 1] = delegateInput[1](inputArray[depth], inputArray[depth + 1]);
+                arrayForWork[depth + 1] = delegat(arrayForWork[depth], arrayForWork[depth + 1]);
 
                 depth++;
             }
-            while (depth != inputArray.Length - 1);
+            while (depth != arrayForWork.Length - 1);
 
-            return inputArray[inputArray.Length - 1];
+            return arrayForWork[arrayForWork.Length - 1];
         }
 
-        #endregion Public Api
+        #endregion
 
-        #region Euclid
+        #region EuclidAlgorithms
 
         /// <summary>
         /// Classic Euclid algorithm for find greatest common divisor
@@ -119,7 +126,7 @@ namespace Algorithms
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        private static int EuclidForTwoNumbers(int firstNumber, int secondNumber)
+        public static int ClassicEuclidAlgorithm(int firstNumber, int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -136,17 +143,13 @@ namespace Algorithms
             return (firstNumber == 0) ? secondNumber : firstNumber;
         }
 
-        #endregion Euclid
-
-        #region BinaryEuclid
-
         /// <summary>
         /// Binary Euclid`s method for find greatest common divisor
         /// </summary>
         /// <param name="firstNumber">first number</param>
         /// <param name="secondNumber">second number</param>
         /// <returns>greatest common divisor</returns>
-        public static int BinaryAlgorithmOfEuclid(int firstNumber, int secondNumber)
+        public static int BinaryEuclidAlgorithm(int firstNumber, int secondNumber)
         {
             firstNumber = Math.Abs(firstNumber);
 
@@ -198,7 +201,7 @@ namespace Algorithms
             return firstNumber << offset;
         }
 
-        #endregion BinaryEuclid
+        #endregion EuclidAlgorithms
 
         #region FormatterDoubleToBinary
 
